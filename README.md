@@ -4,44 +4,44 @@
 
 Our language learning app is an innovative web platform designed to streamline the process of learning a new language online. Our website provides a secure, user-friendly interface that allows users to browse through a wide selection of learning packages, choose the words, and manage their progress with ease. With features such as account creation, item reviews, and secure payment options, we ensure a seamless learning experience for our customers. The administrator side of the website offers robust management tools, enabling efficient handling of items. This project embodies a commitment to both functionality and aesthetics, providing a modern solution for language learning needs.
 
-## Getting Started
+## Building and launching the application
+Don't hesitate to use the app on your own machine. All instructions are in the BUILD.md file.
 
-To get a local copy up and running, follow these simple steps for development and testing purposes.
+## Screenshots of the application
 
-### Prerequisites
-Before installation, ensure you have the following prerequisites on your system. Here's how to check if you have Node.js installed:
+### Landing
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/71cd9f83-3fac-4c0f-9c22-9d4127ce582c)
 
-```bash
-# Example: Node.js
-node --version
-```
+### Signup
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/b0328b69-2210-432d-8e08-b11c213dbd3b)
 
-### Installation
-Follow these steps to set up your development environment:
+### Login
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/e14deabb-03ae-4514-91f7-8666c15fe08c)
 
-Clone the repository:
-```bash
-git clone https://github.com/Bluebloodfr/Node_Project
-```
+### Intermediary
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/580ce8fd-75a9-4dc4-9f91-f179deeef71a)
 
-Install NPM packages:
-```bash
-npm install
-```
+### Profile
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/c6408b28-f2a8-4ce0-a56a-d4cb27da825e)
 
-### Usage
+### Browse Learning Packages
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/2f360615-9cca-44e9-8b12-2b6847ad697c)
 
-After installation, you can run the following command to start the application:
-```bash
-npm start
-```
+### See the words in a Learning Package
+<to be added>
 
-For testing purposes, navigate to the project directory and execute:
-```bash
-npm test
-```
+### Admin page
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/5c0f40c7-5725-4c65-852b-aba939df2a40)
 
-### Contributing
+### Add Learning Package
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/778177f2-e6ec-4535-93a6-a89e80cb25ab)
+
+### Manage Learning Packages
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/6f4cb308-efdc-453c-a69a-6d93a42bad5c)
+![image](https://github.com/Bluebloodfr/Node_Project/assets/96018713/8bddf801-cb04-4518-9ea8-286142b14cb7)
+
+
+## Contributing
 
 We welcome contributions from the community. Here's how you can contribute:
 
