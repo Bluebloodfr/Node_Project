@@ -1,0 +1,89 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clothing Items</title>
+  <link rel="stylesheet" type="text/css" href="clothing.css">
+</head>
+<body>
+<h2>Clothing Items</h2>
+<div id="clothing-list">
+
+</div>
+
+<div id="cart-section">
+  <button onclick="viewCart()">View Cart</button>
+  <span id="cart-count">0</span>
+</div>
+<button id="backToMainPage" onclick="window.location.href='/intermediary.html'">Go Back to Main Page</button>
+
+<script>
+
+  function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+  }
+  let Learning_Packages = [];
+  async function fetchAndDisplayLearning_Packages() {
+    try {
+      const response = await fetch('/api/Learning_Packages');
+      Learning_Packages = await response.json();
+      const listElement = document.getElementById('clothing-list');
+      listElement.innerHTML = '';
+      Learning_Packages.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.innerHTML = `
+                        <h2>${item.name}</h2>
+                        <p>Description: ${item.description}</p>
+                        <p>Size: ${item.size}</p>
+                        <p>Price per Day: ${item.pricePerDay}</p>
+                        <p>State: ${item.state}</p>
+                        <button id="addToCart-${item.Learning_Packages_id}" onclick="addToCart(${item.Learning_Packages_id})">Add to Cart</button>
+                        <button id="removeFromCart-${item.Learning_Packages_id}" onclick="removeFromCart(${item.Learning_Packages_id})" style="display: none;">Remove</button>
+                    `;
+        listElement.appendChild(itemElement);
+      });
+    } catch (error) {
+      console.error('Error fetching Learning_Packages:', error);
+    }
+  }
+  fetchAndDisplayLearning_Packages();
+
+  const shoppingCart = [];
+  function addToCart(itemId) {
+    const itemToAdd = Learning_Packages.find(item => item.Learning_Packages_id === itemId);
+
+    if (itemToAdd) {
+      shoppingCart.push(itemToAdd);
+      document.getElementById(`addToCart-${itemId}`).disabled = true;
+      document.getElementById(`removeFromCart-${itemId}`).style.display = 'inline';
+      updateCartDisplay();
+      setCookie('shoppingCart', JSON.stringify(shoppingCart), 7);
+    }
+  }
+  function removeFromCart(itemId) {
+    const itemIndex = shoppingCart.findIndex(item => item.Learning_Packages_id === itemId);
+    if (itemIndex > -1) {
+      shoppingCart.splice(itemIndex, 1);
+      document.getElementById(`addToCart-${itemId}`).disabled = false;
+      document.getElementById(`removeFromCart-${itemId}`).style.display = 'none';
+      updateCartDisplay();
+      setCookie('shoppingCart', JSON.stringify(shoppingCart), 7);
+    }
+  }
+
+  function updateCartDisplay() {
+    const cartCount = document.getElementById('cart-count');
+    cartCount.textContent = shoppingCart.length;
+  }
+  function viewCart() {
+    window.location.href = '/cart.html';
+  }
+</script>
+</body>
+</html>

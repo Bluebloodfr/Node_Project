@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Learning_Packages</title>
+    <link rel="stylesheet" href="manageLearning_Packages.css">
+</head>
+<body>
+<h1>Manage Learning_Packages Inventory</h1>
+<div id="Learning_PackagesList"></div>
+<button id="backToAdmin" onclick="window.location.href='/admin.html'">Back to Admin Page</button>
+<script>
+    async function fetchAndDisplayLearning_Packages() {
+        try {
+            const response = await fetch('/api/Learning_Packages');
+            const Learning_Packages = await response.json();
+            const listElement = document.getElementById('Learning_PackagesList');
+            listElement.innerHTML = '';
+            Learning_Packages.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.innerHTML = `
+                        <h2>${item.name}</h2>
+                        <p>Description: ${item.description}</p>
+                        <p>Size: ${item.size}</p>
+                        <p>Price per Day: ${item.pricePerDay}</p>
+                        <p>State: ${item.state}</p>
+                        <button onclick="updateLearning_Packages('${item.Learning_Packages_id}')">Update</button>
+                        <button onclick="deleteLearning_Packages('${item.Learning_Packages_id}')">Delete</button>
+                    `;
+                listElement.appendChild(itemElement);
+
+            });
+        } catch (error) {
+            console.error('Error fetching Learning_Packages:', error);
+        }
+    }
+
+    fetchAndDisplayLearning_Packages();
+    async function updateLearning_Packages(Learning_Packages_id) {
+        const pricePerDay = prompt("Enter new price per day:");
+        const state = prompt("Enter new state (New, Used, Deteriorating):");
+        try {
+            await fetch('/api/Learning_Packages/update/' + Learning_Packages_id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pricePerDay, state })
+            });
+            fetchAndDisplayLearning_Packages();
+        } catch (error) {
+            console.error('Error updating Learning_Packages:', error);
+        }
+    }
+    async function deleteLearning_Packages(Learning_Packages_id) {
+        try {
+            await fetch('/api/Learning_Packages/delete/' + Learning_Packages_id, { method: 'DELETE' });
+            fetchAndDisplayLearning_Packages();
+        } catch (error) {
+            console.error('Error deleting Learning_Packages:', error);
+        }
+    }
+</script>
+</body>
+</html>
