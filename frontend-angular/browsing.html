@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Packages</title>
+  <link rel="stylesheet" type="text/css" href="browsing.css">
+</head>
+<body>
+<h2>Learning Packages</h2>
+<div id="learning-package-list">
+  <!-- Learning packages fetched from server will be displayed here -->
+</div>
+
+<div id="cart-section">
+  <button onclick="viewCart()">View Cart</button>
+  <span id="cart-count">0</span>
+</div>
+<button id="backToMainPage" onclick="window.location.href='/intermediary.html'">Go Back to Main Page</button>
+
+<script>
+  let cart = JSON.parse(getCookie('cart') || '[]');
+  updateCartDisplay();
+
+  function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  }
+
+  function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+
+  async function fetchAndDisplayLearningPackages() {
+    try {
+      const response = await fetch('/api/Learning_Packages');
+      const learningPackages = await response.json();
+      displayLearningPackages(learningPackages);
+    } catch (error) {
+      console.error('Error fetching Learning Packages:', error);
+    }
+  }
+
+  function displayLearningPackages(learningPackages) {
+    const listElement = document.getElementById('learning-package-list');
+    listElement.innerHTML = '';
+    learningPackages.forEach(pkg => {
+      const itemElement = document.createElement('div');
+      itemElement.innerHTML = `
+        <h3>${pkg.title}</h3>
+        <p>Description: ${pkg.description}</p>
+        <p>Number of Words: ${pkg.numOfWords}</p>
+        <p>Difficulty: ${pkg.difficulty}</p>
+        <button onclick="addToCart(${JSON.stringify(pkg).split('"').join("&quot;")})">Add to Cart</button>
+      `;
+      listElement.appendChild(itemElement);
+    });
+  }
+
+  function addToCart(pkg) {
+    cart.push(pkg);
+    updateCartDisplay();
+  }
+
+  function updateCartDisplay() {
+    const cartCount = document.getElementById('cart-count');
+    cartCount.textContent = cart.length;
+    setCookie('cart', JSON.stringify(cart), 7);
+  }
+
+  function viewCart() {
+    window.location.href = '/cart.html';
+  }
+
+  fetchAndDisplayLearningPackages();
+</script>
+</body>
+</html>

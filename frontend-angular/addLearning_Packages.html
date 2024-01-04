@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Learning Packages</title>
+    <link rel="stylesheet" href="addLearning_Packages.css">
+</head>
+<body>
+<form id="Learning_PackagesForm">
+    <input type="text" name="title" placeholder="Title" required><br>
+    <textarea name="description" placeholder="Description" required></textarea><br>
+    <input type="number" name="numOfWords" placeholder="Number of Words" required min="1"><br>
+    <select name="difficulty" required>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+    </select><br>
+    <button type="submit">Add Learning Package</button>
+</form>
+<button id="backToAdmin" onclick="window.location.href='/admin.html'">Back to Admin Page</button>
+
+<script>
+    document.getElementById('Learning_PackagesForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+        try {
+            const response = await fetch('/api/Learning_Packages/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                console.log('Learning Package added successfully');
+                alert('Learning Package added successfully');
+            } else {
+                console.error('Failed to add Learning Package');
+                alert('Failed to add Learning Package');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error occurred');
+        }
+    });
+</script>
+</body>
+</html>

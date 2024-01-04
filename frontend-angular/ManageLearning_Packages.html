@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Learning Packages</title>
+    <link rel="stylesheet" href="manageLearning_Packages.css">
+</head>
+<body>
+<h1>Manage Learning Packages</h1>
+<div id="Learning_PackagesList">
+    <!-- Hardcoded learning packages will be displayed here -->
+</div>
+<button id="backToAdmin" onclick="window.location.href='/admin.html'">Back to Admin Page</button>
+<script>
+    let learningPackages = [
+        {
+            Learning_Packages_id: 1,
+            title: 'Basic German Phrases',
+            description: 'Common phrases used in daily conversations',
+            numOfWords: 10,
+            difficulty: 'easy',
+        },
+        {
+            Learning_Packages_id: 2,
+            title: 'German for Travelers',
+            description: 'Essential words and phrases for travel',
+            numOfWords: 20,
+            difficulty: 'medium',
+        },
+        {
+            Learning_Packages_id: 3,
+            title: 'Business German Essentials',
+            description: 'Key terms for professional and business settings',
+            numOfWords: 25,
+            difficulty: 'medium',
+        },
+        {
+            Learning_Packages_id: 4,
+            title: 'Advanced German Conversation',
+            description: 'Complex structures and expressions for fluent speakers',
+            numOfWords: 30,
+            difficulty: 'hard',
+        },
+        {
+            Learning_Packages_id: 5,
+            title: 'German for Engineers',
+            description: 'Advanced words for engineers in German',
+            numOfWords: 60,
+            difficulty: 'Hard'
+        }
+    ];
+
+    function displayLearningPackages() {
+        const listElement = document.getElementById('Learning_PackagesList');
+        listElement.innerHTML = learningPackages.map(pkg => `
+            <div class="package">
+                <h2>${pkg.title}</h2>
+                <p>Description: ${pkg.description}</p>
+                <p>Number of Words: ${pkg.numOfWords}</p>
+                <p>Difficulty: ${pkg.difficulty}</p>
+                <button class="update-button" onclick="updateLearning_Packages('${pkg.Learning_Packages_id}')">Update</button>
+                <button class="delete-button" onclick="deleteLearning_Packages('${pkg.Learning_Packages_id}')">Delete</button>
+            </div>
+        `).join('');
+    }
+
+    displayLearningPackages();
+
+    // ... keep your existing functions for updateLearning_Packages and deleteLearning_Packages ...
+</script>
+</body>
+</html>
