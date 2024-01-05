@@ -1,6 +1,6 @@
 import express from 'express';
 import Learning_PackagesModel from './Learning_PackagesModels.js';
-import { generateImageURL } from './genImage.js';
+import WordModel from './WordModel.js';
 
 const router = express.Router();
 
@@ -22,6 +22,27 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error retrieving items');
+    }
+});
+
+
+// Route to get words for a specific learning package
+router.get('/:packageId/words', async (req, res) => {
+    //console.log("Fetching words for package ID:", packageId);
+    try {
+        const packageId = parseInt(req.params.packageId, 10); // Ensure the parameter is a number
+        const words = await WordModel.findAll({
+            where: { learningPackageId: packageId }
+        });
+
+        if (words.length === 0) {
+            return res.status(404).json({ message: 'No words found for this learning package.' });
+        }
+
+        res.json(words);
+    } catch (error) {
+        console.error('Error fetching words for package:', error);
+        res.status(500).json({ message: 'Server error occurred while fetching words.' });
     }
 });
 
@@ -47,5 +68,6 @@ router.put('/update/:Learning_Packages_id', async (req, res) => {
         res.status(500).send('Error updating item');
     }
 });
+
 
 export default router;

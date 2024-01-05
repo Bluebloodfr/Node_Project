@@ -21,7 +21,7 @@
 <script>
   let cart = JSON.parse(getCookie('cart') || '[]');
   updateCartDisplay();
-
+  let shoppingCart = [];
   function setCookie(name, value, days) {
     var expires = "";
     if (days) {
@@ -29,7 +29,8 @@
       date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
       expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    document.cookie = 'shoppingCart=' + encodeURIComponent(JSON.stringify(shoppingCart)) + ';path=/';
+
   }
 
   function getCookie(name) {
@@ -70,15 +71,23 @@
   }
 
   function addToCart(pkg) {
-    cart.push(pkg);
-    updateCartDisplay();
+    if (!shoppingCart.some(item => item.Learning_Packages_id === pkg.Learning_Packages_id)) {
+      shoppingCart.push(pkg);
+      setCookie('shoppingCart', encodeURIComponent(JSON.stringify(shoppingCart)), 7);
+      updateCartDisplay();
+    } else {
+      alert('This package is already in your cart.');
+    }
   }
+
+
 
   function updateCartDisplay() {
     const cartCount = document.getElementById('cart-count');
     cartCount.textContent = cart.length;
-    setCookie('cart', JSON.stringify(cart), 7);
   }
+
+
 
   function viewCart() {
     window.location.href = '/cart.html';

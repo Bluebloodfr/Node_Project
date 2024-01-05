@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,97 +11,74 @@
     <h1>Your Cart</h1>
     <div id="cartItems">
     </div>
-    <label for="rentalEnd">Rental End Date:</label>
-    <input type="date" id="rentalEnd">
-    <button id="checkoutButton" onclick="createOrderAndCheckout()">Checkout</button>
 </div>
-<button id="backButton" onclick="window.location.href='/browsing.html'">Back to Learning_Packages Selection</button>
+<button id="backButton" onclick="window.location.href='/browsing.html'">Back to Learning Packages Selection</button>
 <script>
-    function deleteCookie(name) {
-        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    }
     function getCookie(name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
         for(var i=0;i < ca.length;i++) {
             var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            while (c.charAt(0)===' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
         }
         return null;
     }
-    let shoppingCart = JSON.parse(getCookie('shoppingCart') || '[]');
-    deleteCookie('shoppingCart');
+    //let shoppingCart = JSON.parse(decodeURIComponent(getCookie('shoppingCart')) || '[]');
 
-    function parseJwt(token) {
-        if (!token) { return null; }
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
+    let shoppingCart = [];
+    console.log("Cookie value:", getCookie('shoppingCart'));
 
-        return JSON.parse(jsonPayload);
+    try {
+        shoppingCart = JSON.parse(decodeURIComponent(getCookie('shoppingCart')) || '[]');
+    } catch (error) {
+        console.error('Error parsing shopping cart JSON:', error);
     }
+    console.log("Cookie value:", getCookie('shoppingCart'));
+
+
     function loadCartItems() {
         const cartItemsContainer = document.getElementById('cartItems');
-        cartItemsContainer.innerHTML = '';
+        cartItemsContainer.innerHTML = ''; // Clear existing items
         shoppingCart.forEach((item, index) => {
-            cartItemsContainer.innerHTML += `
-                <div>
-                    <p>${item.title} - ${item.numOfWords} words</p>
-                    <button onclick="removeFromCart(${index})">Remove</button>
-                </div>`;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cart-item';
+            itemDiv.onclick = function() { viewPackageDetails(item.Learning_Packages_id); }; // Add click event
+            itemDiv.innerHTML = `
+      <div>
+        <p>${item.title} - ${item.numOfWords} words - Difficulty: ${item.difficulty}</p>
+        <button onclick="removeFromCart(${item.Learning_Packages_id}); event.stopPropagation();">Remove</button>
+      </div>
+    `;
+            cartItemsContainer.appendChild(itemDiv);
         });
     }
 
-    function removeFromCart(index) {
-        shoppingCart.splice(index, 1);
-        updateCartDisplay();
-        loadCartItems(); // Refresh the cart display
+    function removeFromCart(learningPackageId) {
+        shoppingCart = shoppingCart.filter(item => item.id !== learningPackageId); // Changed Learning_Packages_id to id
+        document.cookie = 'shoppingCart=' + encodeURIComponent(JSON.stringify(shoppingCart)) + ';path=/';
+        loadCartItems();
     }
 
-    function createOrderAndCheckout() {
-        const rentalEnd = document.getElementById('rentalEnd').value;
-        const rentalStart = new Date();
-        const rentalEndParsed = new Date(rentalEnd);
-        if (!rentalEnd) {
-            alert('Please select a rental end date.');
-            return;
-        }
-        if (rentalEndParsed < rentalStart) {
-            alert('The rental end date cannot be before the rental start date.');
-            return;
-        }
-        const rentalDays = (rentalEndParsed - rentalStart) / (1000 * 60 * 60 * 24);
-        let userToken = getCookie('userToken');
-        let decodedToken = parseJwt(userToken);
-        let userId = decodedToken ? decodedToken.userId : null;
-        fetch('/api/users/checkout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${userToken}`
-            },
-            body: JSON.stringify({ userId, cartItems: shoppingCart, rentalEnd }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.order_id) {
-                    const totalAmount = shoppingCart.reduce((sum, item) => sum + (item.pricePerDay * rentalDays), 0);
-                    window.location.href = `/payment.html?amount=${totalAmount}&order_id=${data.order_id}`;
-                } else {
-                    console.error('Error: Order ID not returned.');
-                    alert('There was an error processing your order. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while processing your checkout.');
-            });
+    function viewPackageDetails(packageId) {
+        // Redirect to the details page for the learning package
+        window.location.href = '/words.html?packageId=' + packageId;
     }
 
-    window.onload = loadCartItems;
+    window.onload = function() {
+        let shoppingCartValue = getCookie('shoppingCart');
+        shoppingCartValue = shoppingCartValue ? decodeURIComponent(shoppingCartValue) : '[]';
+
+        try {
+            shoppingCart = JSON.parse(shoppingCartValue);
+        } catch (error) {
+            console.error('Error parsing shopping cart JSON:', error);
+            shoppingCart = []; // Set to an empty array if parsing fails
+        }
+
+        loadCartItems();
+    };
+
 </script>
 </body>
 </html>

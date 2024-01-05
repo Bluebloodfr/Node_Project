@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learning Package Words</title>
+    <link rel="stylesheet" href="words.css">
+</head>
+<body>
+<h1>Word Practice</h1>
+<div id="wordContainer">
+    <p id="wordInEnglish">Word in English</p>
+    <button id="showTranslationBtn">Show Translation</button>
+    <p id="wordInGerman" style="display: none;">Translation in German</p>
+    <button id="nextWordBtn" style="display: none;">Next Word</button>
+</div>
+
+<script>
+    let words = []; // Array to store words and translations
+    let currentWordIndex = 0;
+
+    async function fetchPackageWords(packageId) {
+        //console.log(`Fetching words for package ID: ${packageId}`); // Log the package ID
+        try {
+            const response = await fetch(`http://localhost:3000/api/Learning_Packages/${packageId}/words`)
+            console.log('Response received', response); // Log the response
+            if(response.ok) {
+                words = await response.json();
+                console.log('Words loaded', words); // Log the words
+                loadWord();
+            } else {
+                console.error('Failed to load words for package:', packageId);
+            }
+        } catch (error) {
+            console.error('Error fetching words:', error);
+        }
+    }
+
+    function showTranslation() {
+        document.getElementById('wordInGerman').style.display = 'block';
+        document.getElementById('nextWordBtn').style.display = 'block';
+    }
+
+    function nextWord() {
+        currentWordIndex = (currentWordIndex + 1) % words.length;
+        loadWord();
+    }
+
+    function loadWord() {
+        if (words.length > 0) {
+            const word = words[currentWordIndex];
+            document.getElementById('wordInEnglish').textContent = word.english;
+            document.getElementById('wordInGerman').textContent = word.german;
+        }
+        document.getElementById('wordInGerman').style.display = 'none';
+        document.getElementById('nextWordBtn').style.display = 'none';
+    }
+
+    // Event listeners for buttons
+    document.getElementById('showTranslationBtn').addEventListener('click', showTranslation);
+    document.getElementById('nextWordBtn').addEventListener('click', nextWord);
+
+    // Start the process by fetching words for the packageId from the query params
+    const queryParams = new URLSearchParams(window.location.search);
+    const packageId = queryParams.get('packageId');
+    if (packageId) {
+        fetchPackageWords(packageId);
+    } else {
+        console.error('No packageId found in query parameters');
+    }
+</script>
+</body>
+</html>

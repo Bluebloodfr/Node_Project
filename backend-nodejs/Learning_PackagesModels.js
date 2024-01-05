@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from './sequelize.js';
+import WordModel from './WordModel.js';
 
 export class Learning_PackagesModel extends Model {}
 
