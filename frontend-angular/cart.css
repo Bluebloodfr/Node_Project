@@ -16,18 +16,17 @@ body {
 }
 
 .cart-item {
-    /* Apply similar styles as in browsing.css for consistency */
     background-color: #e9ecef;
     border: 2px solid #007bff;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 10px;
-    cursor: pointer; /* Indicates item can be clicked */
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .cart-item:hover {
-    background-color: #d9dcef; /* Slightly change color on hover */
+    background-color: #d9dcef;
 }
 
 

@@ -3,7 +3,6 @@ import userRoutes from './UserRoutes.js';
 import Learning_PackagesRoutes from './Learning_PackagesRoutes.js';
 import jwt from 'jsonwebtoken';
 import AccountsModels from './AccountsModels.js';
-import paymentDetailsRoutes from './PaymentDetailsRoutes.js';
 import path from 'path';
 import cors from 'cors';
 
@@ -20,6 +19,5 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/Learning_Packages', Learning_PackagesRoutes);
-app.use('/api/pay', paymentDetailsRoutes);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
